@@ -63,10 +63,13 @@
 
 ### Опционально
 
-Хорошим дополнением к этому плагину являются автодополнения для
-замечательного `nvim-cmp`: `cmp-confluence-html`, `cmp-confluence-markdown`
-и `cmp-confluence-vimwiki`, которые позволяют вставлять ссылки на статьи из
-Confluence в форматах HTML, Markdown или Vimwiki.
+Хорошим дополнением к этому плагину являются автодополнения для замечательного
+[nvim-cmp](https://github.com/hrsh7th/nvim-cmp):
+[cmp-confluence-html](https://github.com/cpkio/cmp-confluence-html),
+[cmp-confluence-markdown](https://github.com/cpkio/cmp-confluence-markdown)
+и [cmp-confluence-vimwiki](https://github.com/cpkio/cmp-confluence-vimwiki),
+которые позволяют вставлять ссылки на статьи из Confluence в форматах HTML,
+Markdown или Vimwiki.
 
 ## Конвенции и недостатки
 
