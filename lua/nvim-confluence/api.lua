@@ -78,7 +78,7 @@ function api:post(space, title, ancestor, page)
       vim.json.decode(table.concat(response_body))
     ), 5)
   else
-    return nil
+    return vim.json.decode(table.concat(response_body))
   end
 
 end
@@ -122,7 +122,7 @@ function api:put(space, title, page, id, version, message)
       vim.json.decode(table.concat(response_body))
     ), 5)
   else
-    return nil
+    return vim.json.decode(table.concat(response_body))
   end
 
 end

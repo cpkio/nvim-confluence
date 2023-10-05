@@ -16,6 +16,11 @@ local function getversion(id)
   return data.version.number
 end
 
+local function getspace(id)
+  local data = api:get("/rest/api/content/".. id .. "?expand=space")
+  return data.space.key
+end
+
 local function gettitle(id)
   local data = api:get("/rest/api/content/".. id)
   return data.title
@@ -31,8 +36,10 @@ function M.create(file, title, parentid)
     vim.notify('File "' .. file ..'" not found', 4)
     return
   end
-  api:post('SB', title, parentid, content)
+  local space = getspace(parentid)
+  local res = api:post(space, title, parentid, content)
   print('Created page with title "' .. title .. '"')
+  return res.id
 end
 
 function M.update(file, title, message)
@@ -41,7 +48,8 @@ function M.update(file, title, message)
   local version = tonumber(getversion(id))
   local f = io.open(file, 'rb')
   local content = vim.fn.split(f:read('*all'), '\n')
-  api:put('SB', title, content, id, version + 1, message)
+  local space = getspace(id)
+  local res = api:put(space, title, content, id, version + 1, message)
   print('Updated ' .. id .. ' with "' .. title .. '"')
 end
 
