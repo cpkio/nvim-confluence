@@ -127,7 +127,7 @@ Markdown или Vimwiki.
     * `require("nvim-confluence").pages.update()` — окно выбора страницы,
       содержимое которой будет заменено содержимым текущего буфера (HTML).
 
-    * `require("nvim-confluence").pages.comment()` — окно выбора страницы,
+    * `require("nvim-confluence").comments.comment()` — окно выбора страницы,
       к которой будет добавлен комментарий, состоящий из текста в текущем
       буфере (Markdown).
 
@@ -210,7 +210,7 @@ map('n','<C-d>V', '',  {
   end
 })
 
--- CTRL-D + SHIFT-V = Выбор страниц с поиском по id, пространству, заголовку и тэгам одновременно
+-- CTRL-D + ALT-V = Выбор страниц с поиском по id, пространству, заголовку и тэгам одновременно
 map('n','<C-d><A-v>', '',  {
   desc = "",
   noremap = true, silent = true,
