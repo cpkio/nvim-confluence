@@ -53,6 +53,15 @@ function M.update(file, title, message)
   print('Updated ' .. id .. ' with "' .. title .. '"')
 end
 
+function M.update_id(id, file, title, message)
+  if not (id and file and title and message) then return end
+  local version = tonumber(getversion(id))
+  local space = getspace(id)
+  local f = io.open(file, 'rb')
+  local content = vim.fn.split(f:read('*all'), '\n')
+  local res = api:put(space, title, content, id, version + 1, message)
+  print('Updated ' .. id .. ' with "' .. title .. '"')
+end
 
 function M.move(id, newparent, newtitle)
   api:move(id, newparent, newtitle, getversion(id)+1)
