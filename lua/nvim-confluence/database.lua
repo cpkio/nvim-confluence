@@ -8,8 +8,8 @@ local confldb = sqlite {
   opts = {
     cache_size = 1048576,
     page_size = 1048576,
-    threads = 4,
-    synchronous = 'ON',
+    threads = 1,
+    synchronous = 'OFF',
   },
   pages = {
     id = { 'int', required = true, unique = true, primary = true },
