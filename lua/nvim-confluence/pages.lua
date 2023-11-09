@@ -82,7 +82,7 @@ pages.load = function(opts)
         term.green .. 'ALT-O' .. term.reset .. ' to open Web pages.'
       }
     ),
-      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" ' .. nth .. ' --header-lines=3 --multi --expect=ctrl-t,ctrl-y,ctrl-p,alt-m,alt-r,alt-o --ansi --prompt="Confluence pages> "'))
+      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" ' .. nth .. ' --header-lines=3 --multi --expect=ctrl-t,ctrl-y,ctrl-p,alt-m,alt-r,alt-o --ansi --prompt="Select pages> "'))
     if not choices then return end
 
     local choice_parent, parentpage, parenttitle
@@ -231,7 +231,7 @@ pages.delete = function(opts)
        term.red .. 'CTRL-L' .. term.reset .. ' to delete pages.',
        term.red .. 'CTRL-W' .. term.reset .. ' to delete page tree.'}
     ),
-      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" ' .. nth .. ' --expect=ctrl-l,ctrl-w --header-lines=3 --multi --ansi --prompt="Confluence tags> "'))
+      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" ' .. nth .. ' --expect=ctrl-l,ctrl-w --header-lines=3 --multi --ansi --prompt="Select pages> "'))
     if not choices_pages then return end
 
     if choices_pages[1] == "" then
