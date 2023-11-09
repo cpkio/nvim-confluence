@@ -256,4 +256,49 @@ pages.delete = function(opts)
   end)()
 end
 
+pages.versions = function(opts)
+  local opts = utils.normalize_opts(opts)
+  local nth
+  if opts.nth then
+    nth = '--nth='..opts.nth
+  else
+    nth = ''
+  end
+
+  coroutine.wrap(function ()
+    local choice = opts.fzf(pages.render(),
+      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" ' .. nth .. ' --ansi --prompt="Select page> "'))
+    if not choice then return end
+    local pageid, space, title = pages.match(unpack(choice))
+    local data = api:get("/rest/experimental/content/".. pageid .. "/version")
+    -- if data == nil or #data == 0 then return end
+    local versions = {}
+    for k,v in pairs(data.results) do
+      local w = utf.width(v.by.displayName)
+      table.insert(versions,
+        term.blue .. string.format('#%-3s', v.number) .. term.reset ..
+        ' ' ..
+        term.green .. string.format("%s", v.by.displayName .. string.rep(' ', 30-w)) .. term.reset ..
+        ' ' ..
+        v.message
+      )
+    end
+    local ver = opts.fzf(versions,
+      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" --ansi --prompt="Version> "'))
+    if not ver then return end
+    local v = utf.match(unpack(ver), '#(%d+)')
+    local text = api:get('/rest/api/content/' .. pageid .. '?status=historical&expand=body.storage&version=' .. v)
+    local code = api:convert(text.body.storage.value)
+    util.pipe(code.value, vim.trim(pageid .. ' ' .. title .. ' v' .. v), 'pandoc', {
+      '--eol=lf',
+      '--wrap=preserve',
+      '--columns=120',
+      '-f',
+      'html',
+      '-t',
+      'plain'
+    })
+  end)()
+end
+
 return pages
