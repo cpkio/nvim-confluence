@@ -278,9 +278,11 @@ pages.versions = function(opts)
       table.insert(versions,
         term.blue .. string.format('#%-3s', v.number) .. term.reset ..
         ' ' ..
+        term.cyan .. string.format('%10s', string.sub(v.when, 1, 10)).. term.reset ..
+        ' ' ..
         term.green .. string.format("%s", v.by.displayName .. string.rep(' ', 30-w)) .. term.reset ..
         ' ' ..
-        v.message
+        utf.gsub(fn.trim(v.message), '\n', ' ')
       )
     end
     local ver = opts.fzf(versions,
