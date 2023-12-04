@@ -7,7 +7,7 @@ local confldb = sqlite {
   uri = vim.fn.expand('~')..'/confluence_db.db',
   opts = {
     cache_size = 1048576,
-    page_size = 1048576,
+    page_size = 65536,
     threads = 1,
     synchronous = 'OFF',
   },
