@@ -28,7 +28,7 @@ pages.render = function(tip)
 end
 
 pages.match = function(string)
-  local page, space, title = utf.match(util.unescape(string), '^(%d+)%s+(%u+)%s+([^'.. util.delim .. ']+)')
+  local page, space, title = utf.match(util.unescape(string), '^(%d+)%s+(%u%w+)%s+([^'.. util.delim .. ']+)')
   return page, space, title
 end
 
