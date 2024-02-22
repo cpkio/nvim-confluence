@@ -28,7 +28,7 @@ pages.render = function(tip)
 end
 
 pages.match = function(string)
-  local page, space, title = utf.match(util.unescape(string), '^(%d+)%s+(%u%w+)%s+([^'.. util.delim .. ']+)')
+  local page, space, title = utf.match(util.unescape(string), '^(%d+)%s+(%w+)%s+([^'.. util.delim .. ']+)')
   return page, space, title
 end
 
@@ -46,6 +46,10 @@ local function cleanup(text)
   local text = utf.gsub(text, regex4, '<p>image:%1</p>')
   -- local text = string.gsub(text, regex5, '')
   return text
+end
+
+local function sanitize(text)
+  return utf.gsub(text, "[^%w%s]", "_")
 end
 
 local function getcontent(page)
@@ -139,12 +143,12 @@ pages.load = function(opts)
           end,
         nil, nil, nil, true, 10000)
 
-        util.pipe(xml.decode(xml.str(decoded)), vim.trim(page .. ' ' .. title), nil, nil, function(t) local _t = fn.split(t, [[\n]], true); return table.slice(_t, 2, #_t-2) end) -- отрезаем <phony></phony>
+        util.pipe(xml.decode(xml.str(decoded)), vim.trim(page .. ' ' .. sanitize(title)), nil, nil, function(t) local _t = fn.split(t, [[\n]], true); return table.slice(_t, 2, #_t-2) end) -- отрезаем <phony></phony>
       end
 
       if choices[1] == "ctrl-y" then
         local code = getcontent(page)
-        util.pipe(code, vim.trim(page .. ' ' .. title), nil, nil, function(t) return fn.split(t, [[\n]], true) end)
+        util.pipe(code, vim.trim(page .. ' ' .. sanitize(title)), nil, nil, function(t) return fn.split(t, [[\n]], true) end)
       end
 
       if choices[1] == "ctrl-p" then
@@ -291,7 +295,7 @@ pages.versions = function(opts)
     local v = utf.match(unpack(ver), '#(%d+)')
     local text = api:get('/rest/api/content/' .. pageid .. '?status=historical&expand=body.storage&version=' .. v)
     local code = api:convert(text.body.storage.value)
-    util.pipe(code.value, vim.trim(pageid .. ' ' .. title .. ' v' .. v), 'pandoc', {
+    util.pipe(code.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v), 'pandoc', {
       '--eol=lf',
       '--wrap=preserve',
       '--columns=120',
