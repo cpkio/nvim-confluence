@@ -181,7 +181,7 @@ db.push = function(page)
     title = page.title,
     space = space
   })
-  if page.metadata.labels.results then
+  if #page.metadata.labels.results then
     for _,tag in pairs(page.metadata.labels.results) do
       insert_if_absent(tag)
       p2t:insert({
@@ -202,6 +202,8 @@ db.update = function()
     nextpage = page._links.next
     pool = table.merge(pool, page.results)
   end
+
+  pool = vim.tbl_filter(function(page) return page.status == 'current' end, pool)
 
   vim.notify("Got " .. #pool .. " Confluence pages")
 
