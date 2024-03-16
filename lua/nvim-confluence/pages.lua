@@ -111,7 +111,7 @@ pages.load = function(opts)
       if choices[1] == "" then
         local text = getcontent(page)
         local code = api:convert(text)
-        util.pipe(code.value, vim.trim(page .. ' ' .. title), 'pandoc', {
+        util.pipe(code.value, vim.trim(page .. ' ' .. sanitize(title)), 'pandoc', {
           '--eol=lf',
           '--wrap=preserve',
           '--columns=1024',

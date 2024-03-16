@@ -49,7 +49,7 @@ tags.tag = function(opts)
 
     local choices_pages = opts.fzf(pages.render(),
       (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" --header="Tags: +'.. table.concat(_tags, ' +') ..
-                          '" --expect=ctrl-b --multi --ansi --prompt="Confluence pages> "'))
+                          '" --expect=ctrl-q --multi --ansi --prompt="Confluence pages> "'))
     if not choices_pages then return end
 
     if choices_pages[1] == "" then
@@ -58,10 +58,13 @@ tags.tag = function(opts)
         api:tag(pageid, title, _tags)
       end
     end
-    if choices_pages[1] == "ctrl-b" then
+    if choices_pages[1] == "ctrl-q" then
       for i=2, #choices_pages do
         local pageid, space, title = pages.match(choices_pages[i])
-        api:tag_remove(pageid, title, tags)
+        print(title, pageid)
+        for _, _tag in pairs(_tags) do
+          api:tag_remove(pageid, title, _tag)
+        end
       end
     end
   end)()

@@ -358,38 +358,29 @@ function api:tag(page, title, tags)
   end
 end
 
-function api:tag_remove(page, title, tags)
-  local post_body = {}
-  for _, tag in pairs(tags) do
-    table.insert(post_body, { name = tag })
-  end
-
+function api:tag_remove(page, title, tag)
   local response_body = {}
-
-  local post_json = vim.json.encode(post_body)
-
   local base_url = os.getenv("CONFLUENCE_HOST")
-  local endpoint = "/rest/api/content/" .. page .. "/label"
+  local endpoint = "/rest/api/content/" .. page .. "/label?name=" .. tag
 
   local res, code, response_headers, status = https.request{
       url = base_url .. endpoint,
       method = "DELETE",
       headers = {
         ["Authorization"] = "Bearer " .. os.getenv("CONFLUENCE_TOKEN"),
-        ["Content-Type"] = "application/json",
-        ["Content-Length"] = #post_json
       },
-      source = ltn12.source.string(post_json),
       sink = ltn12.sink.table(response_body),
   }
   vim.notify('Response code ' .. tostring(code) .. ', status ' .. tostring(status))
 
-  if type(response_body) == "table" then
+  if code ~=204 and type(response_body) == "table" then
     vim.notify(vim.inspect(
       vim.json.decode(table.concat(response_body))
     ), 3)
+  else
+    vim.notify("Тэг «" .. tag .. "» удален со страницы «" .. title  .. "»")
+    return nil
   end
-  return nil
 end
 
 return api
