@@ -290,20 +290,27 @@ pages.versions = function(opts)
       )
     end
     local ver = opts.fzf(versions,
-      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" --ansi --prompt="Version> "'))
+      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" --ansi --expect=ctrl-y --prompt="Version> "'))
     if not ver then return end
-    local v = utf.match(unpack(ver), '#(%d+)')
+    local v = utf.match(ver[2], '#(%d+)')
     local text = api:get('/rest/api/content/' .. pageid .. '?status=historical&expand=body.storage&version=' .. v)
-    local code = api:convert(text.body.storage.value)
-    util.pipe(code.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v), 'pandoc', {
-      '--eol=lf',
-      '--wrap=preserve',
-      '--columns=120',
-      '-f',
-      'html',
-      '-t',
-      'plain'
-    })
+
+    if ver[1] == "ctrl-y" then
+      util.pipe(text.body.storage.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v), nil, nil, function(t) return fn.split(t, [[\n]], true) end)
+    end
+
+    if ver[1] == "" then
+      local code = api:convert(text.body.storage.value)
+      util.pipe(code.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v), 'pandoc', {
+        '--eol=lf',
+        '--wrap=preserve',
+        '--columns=120',
+        '-f',
+        'html',
+        '-t',
+        'plain'
+      })
+    end
   end)()
 end
 
