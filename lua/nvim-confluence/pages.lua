@@ -111,7 +111,7 @@ pages.load = function(opts)
       if choices[1] == "" then
         local text = getcontent(page)
         local code = api:convert(text)
-        util.pipe(code.value, vim.trim(page .. ' ' .. sanitize(title)), 'pandoc', {
+        util.pipe(code.value, vim.trim(page .. ' ' .. sanitize(title) .. ' (' .. space .. ')'), 'pandoc', {
           '--eol=lf',
           '--wrap=preserve',
           '--columns=1024',
@@ -143,12 +143,12 @@ pages.load = function(opts)
           end,
         nil, nil, nil, true, 10000)
 
-        util.pipe(xml.decode(xml.str(decoded)), vim.trim(page .. ' ' .. sanitize(title)), nil, nil, function(t) local _t = fn.split(t, [[\n]], true); return table.slice(_t, 2, #_t-2) end) -- отрезаем <phony></phony>
+        util.pipe(xml.decode(xml.str(decoded)), vim.trim(page .. ' ' .. sanitize(title) .. ' (' .. space .. ')'), nil, nil, function(t) local _t = fn.split(t, [[\n]], true); return table.slice(_t, 2, #_t-2) end) -- отрезаем <phony></phony>
       end
 
       if choices[1] == "ctrl-y" then
         local code = getcontent(page)
-        util.pipe(code, vim.trim(page .. ' ' .. sanitize(title)), nil, nil, function(t) return fn.split(t, [[\n]], true) end)
+        util.pipe(code, vim.trim(page .. ' ' .. sanitize(title) .. ' (' .. space .. ')'), nil, nil, function(t) return fn.split(t, [[\n]], true) end)
       end
 
       if choices[1] == "ctrl-p" then
@@ -296,12 +296,12 @@ pages.versions = function(opts)
     local text = api:get('/rest/api/content/' .. pageid .. '?status=historical&expand=body.storage&version=' .. v)
 
     if ver[1] == "ctrl-y" then
-      util.pipe(text.body.storage.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v), nil, nil, function(t) return fn.split(t, [[\n]], true) end)
+      util.pipe(text.body.storage.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v .. ' (' .. space .. ')'), nil, nil, function(t) return fn.split(t, [[\n]], true) end)
     end
 
     if ver[1] == "" then
       local code = api:convert(text.body.storage.value)
-      util.pipe(code.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v), 'pandoc', {
+      util.pipe(code.value, vim.trim(pageid .. ' ' .. sanitize(title) .. ' v' .. v .. ' (' .. space .. ')'), 'pandoc', {
         '--eol=lf',
         '--wrap=preserve',
         '--columns=120',
