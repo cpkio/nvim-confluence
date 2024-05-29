@@ -2,6 +2,10 @@ vim.api.nvim_create_user_command('ConfluenceUpdate', function()
   require('nvim-confluence').db.update()
 end, { desc = 'Update SQLite database from Confluence API request' })
 
+vim.api.nvim_create_user_command('ConfluenceRefreshCache', function()
+  require('nvim-confluence').db.cache_recreate()
+end, { desc = 'Refresh entries cache' })
+
 vim.api.nvim_create_user_command('ConfluenceInstallPandocFilter', function()
   require('nvim-confluence').install()
 end, { desc = 'Install no-header-ids.lua to Pandoc Appdata Folder' })

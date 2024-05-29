@@ -70,10 +70,9 @@ function db:cache_recreate()
         table.insert(tglist, term.brightcyan .. s .. term.reset)
       end
     end
-    table.insert(results, string.format("%-24s", term.green .. tostring(v.id) .. term.reset) ..
-                          string.format("%-18s", term.red .. v.space .. term.reset) ..
-                          string.format("%s", term.blue .. util.unescape(v.title) .. term.reset) ..
-                          util.delim ..
+    table.insert(results, string.format("%-21s", term.green .. tostring(v.id) .. ' ' .. term.reset) .. util.delim ..
+                          string.format("%-14s", term.red .. v.space .. term.reset) .. util.delim ..
+                          string.format("%s", term.blue .. util.unescape(v.title) .. term.reset) .. util.delim ..
                           string.format("%s", table.concat(tglist, util.delim))
     )
   end
