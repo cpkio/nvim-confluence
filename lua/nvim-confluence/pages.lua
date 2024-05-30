@@ -96,7 +96,7 @@ pages.load = function(opts)
           term.green .. 'ENTER' .. term.reset .. ' to select ' ..
           term.red .. 'parent page' .. term.reset .. ' for previously selected pages.'
         ),
-          (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" --nth=1 --header-lines=1 --ansi --prompt="Select parent page> "'))
+          (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" ' .. nth .. ' --header-lines=1 --ansi --prompt="Select parent page> "'))
 
         if not choice_parent then
           return
@@ -177,17 +177,21 @@ end
 pages.create = function(opts)
   local buffercontent = nvim.buf_get_lines(0, 0, -1, true)
   local opts = utils.normalize_opts(opts)
+  local nth = ''
+  if opts.nth then
+    nth = '--nth='..opts.nth
+  end
 
   coroutine.wrap(function ()
     local choice = opts.fzf(pages.render(
       term.green .. 'ENTER' .. term.reset .. ' to select ' ..
       term.red .. 'parent page' .. term.reset .. ' for current buffer.'
     ),
-      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" --nth=1 --header-lines=1 --ansi --prompt="Select parent page> "'))
+      (term.fzf_colors .. ' --delimiter="' .. util.delim .. '" ' .. nth ..  ' --header-lines=1 --ansi --prompt="Select parent page> "'))
     if not choice then return end
 
     local parent, space, _ = pages.match(choice[1])
-    vim.ui.input({ prompt = 'Введите заголовок для новой статьи:', prompt_width = 48 }, function(pagetitle)
+    vim.ui.input({ prompt = 'Введите заголовок для новой статьи:', prompt_width = 64 }, function(pagetitle)
       api:post(space, pagetitle, parent, buffercontent)
       vim.notify("Статья «" .. pagetitle  .. "» загружена ")
     end)
@@ -198,6 +202,10 @@ end
 pages.update = function(opts)
   local buffercontent = nvim.buf_get_lines(0, 0, -1, true)
   local opts = utils.normalize_opts(opts)
+  local nth = ''
+  if opts.nth then
+    nth = '--nth='..opts.nth
+  end
 
   coroutine.wrap(function ()
     local choice = opts.fzf(pages.render(
@@ -205,7 +213,7 @@ pages.update = function(opts)
       ' to select ' .. term.red .. ' page to update' .. term.reset ..
       ' with current buffer.'
     ),
-      (term.fzf_colors .. '--delimiter="' .. util.delim .. '" --nth=1 --header-lines=1 --ansi --prompt="Select page to replace> "'))
+      (term.fzf_colors .. '--delimiter="' .. util.delim  .. '" ' .. nth .. ' --header-lines=1 --ansi --prompt="Select page to replace> "'))
     if not choice then return end
 
     local replacedpage, space, title = pages.match(choice[1])
@@ -213,7 +221,7 @@ pages.update = function(opts)
     local version = tonumber(getversion(replacedpage))
 
     vim.ui.input({ prompt = 'Введите заголовок для новой редакции статьи:', default = vim.trim(title) }, function(pagetitle)
-      vim.ui.input({ prompt = 'Введите комментарий к правке в '..pagetitle..':', prompt_width = 75, prompt_height = 3 } , function(message)
+      vim.ui.input({ prompt = 'Введите комментарий к правке в '..pagetitle..':', prompt_width = 72, prompt_height = 3 } , function(message)
         api:put(space, pagetitle, buffercontent, replacedpage, version + 1, util.wrap(message, 78, 0))
         vim.notify(util.wrap("Статья «" .. pagetitle  .. "» загружена с комментарием «" .. message .. "» "))
       end)
