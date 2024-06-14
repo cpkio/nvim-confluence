@@ -57,7 +57,7 @@ function M.input(opts, on_confirm, win_config)
 
   vim.keymap.set({ 'n', 'i', 'v' }, '<cr>', function()
     local lines = vim.api.nvim_buf_get_lines(buffer, 0, 1, false)
-    if utf.len(lines[1]) > 5 and on_confirm then
+    if utf.len(lines[1]) > 3 and on_confirm then
       on_confirm(lines[1])
     end
     vim.api.nvim_win_close(window, true)
