@@ -54,6 +54,9 @@ function M.update(file, title, message)
 end
 
 function M.update_id(id, file, title, message)
+  if title == nil then
+    title = gettitle(id)
+  end
   if not (id and file and title and message) then return end
   local version = tonumber(getversion(id))
   local space = getspace(id)
