@@ -48,7 +48,7 @@ nconfluence.markdown_transform = function()
   end
   util.pipe(table.concat(nvim.buf_get_lines(0, 0, -1, true), '\n'),
     fn.fnamemodify(nvim.buf_get_name(0), ':t:r') .. '.html',
-    'pandoc31',
+    'pandoc',
     {
         '--eol=lf',
         '--lua-filter=no-header-ids.lua',
