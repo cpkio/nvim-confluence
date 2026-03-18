@@ -67,7 +67,7 @@ function db:cache_recreate()
       end
       table.sort(tglist_basic)
       for _, s in pairs(tglist_basic) do
-        table.insert(tglist, term.brightcyan .. s .. term.reset)
+        table.insert(tglist, term.brightcyan .. '(' .. s .. ')' .. term.reset)
       end
     end
     table.insert(results, string.format("%-21s", term.green .. tostring(v.id) .. ' ' .. term.reset) .. util.delim ..
